@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openwebui-environment
+  namespace: kube-system
+data:
+  environment.enable_oauth_signup: "true"
+  environment.github_client_id: "$GITHUB_CLIENT_ID"
+  environment.github_client_secret: "$GITHUB_CLIENT_SECRET"

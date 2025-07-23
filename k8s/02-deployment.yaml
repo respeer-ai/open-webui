@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open-webui-service
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: open-webui-service
+  template:
+    metadata:
+      labels:
+        app: open-webui-service
+    spec:
+      containers:
+      - name: open-webui-service
+        image: ghcr.io/u8f69/open-webui:v0.6.18.1
+        imagePullPolicy: Always
+        env:
+        - name: ENABLE_OAUTH_SIGNUP
+          valueFrom:
+            configMapKeyRef:
+              name: openwebui-environment
+              key: environment.enable_oauth_signup
+        - name: GITHUB_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: openwebui-environment
+              key: environment.github_client_id
+        - name: GITHUB_CLIENT_SECRET
+          valueFrom:
+            configMapKeyRef:
+              name: openwebui-environment
+              key: environment.github_client_secret
+        volumeMounts:
+        - name: work
+          mountPath: /app/backend/data
+      volumes:
+      - name: work
+        persistentVolumeClaim:
+          claimName: openwebui-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: open-webui-service
+  namespace: kube-system
+spec:
+  ports:
+    - name: open-webui-service
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: open-webui-service
