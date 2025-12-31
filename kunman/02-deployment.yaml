@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: open-webui-service
-        image: ghcr.io/u8f69/open-webui:v0.6.18.1
+        image: ghcr.io/open-webui/open-webui:v0.6.18
         imagePullPolicy: Always
         env:
         - name: ENABLE_OAUTH_SIGNUP
